@@ -20,16 +20,16 @@
 - [x] Create database connection & SQLAlchemy async engine
 
 ### Phase 2: The Data Pipeline
-**Status**: 🚧 Next
+**Status**: ✅ Complete
 **Objective**: Implement resilient data fetching and storage.
 **Requirements**: REQ-01, REQ-02, REQ-03, REQ-06
 **Tasks**:
-- [ ] Implement CCXT fetcher (BTC/USDT)
-- [ ] Create DB migrations for `raw_market_data`
-- [ ] Write Integration Tests (Fetch -> DB -> Read)
+- [x] Implement CCXT fetcher (BTC/USDT)
+- [x] Create DB migrations for `raw_market_data`
+- [x] Write Integration Tests (Fetch -> DB -> Read)
 
 ### Phase 3: The Math
-**Status**: ⬜ Not Started
+**Status**: 🚧 Next
 **Objective**: Implement analytical engine and statistical metrics.
 **Requirements**: REQ-04, REQ-05
 **Tasks**:

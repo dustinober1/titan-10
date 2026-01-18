@@ -2,7 +2,9 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from typing import AsyncGenerator
 from contextlib import asynccontextmanager
 
-from src.shared.config import settings
+from src.shared.config import get_settings
+
+settings = get_settings()
 
 # Create Async Engine
 engine = create_async_engine(
