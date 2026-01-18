@@ -123,6 +123,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-04 | Phase 3 | Pending |
 | API-05 | Phase 3 | Pending |
 | API-06 | Phase 3 | Pending |
+| API-07 | Phase 4 | Pending |
+| API-08 | Phase 4 | Pending |
+| API-09 | Phase 4 | Pending |
+| API-10 | Phase 4 | Pending |
 | AUTO-01 | Phase 1 | Pending |
 | AUTO-02 | Phase 1 | Pending |
 | AUTO-03 | Phase 1 | Pending |
@@ -130,10 +134,6 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTO-05 | Phase 1 | Pending |
 | AUTO-06 | Phase 2 | Pending |
 | AUTO-07 | Phase 4 | Pending |
-| API-07 | Phase 4 | Pending |
-| API-08 | Phase 4 | Pending |
-| API-09 | Phase 4 | Pending |
-| API-10 | Phase 4 | Pending |
 | DEPL-01 | Phase 5 | Pending |
 | DEPL-02 | Phase 5 | Pending |
 | DEPL-03 | Phase 5 | Pending |
@@ -141,10 +141,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEPL-05 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 35 total
-- Mapped to phases: 35
+- v1 requirements: 38 total
+- Mapped to phases: 38
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2025-01-18*
-*Last updated: 2025-01-18 after initial definition*
+*Last updated: 2025-01-18 after roadmap creation*
