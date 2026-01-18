@@ -11,16 +11,16 @@
 ## Phases
 
 ### Phase 1: Foundation
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Setup core infrastructure, database, and dependency management.
 **Requirements**: REQ-06, REQ-11 (Framework)
 **Tasks**:
-- [ ] Initialize Git with poetry/uv
-- [ ] Configure docker-compose (Postgres + TimescaleDB)
-- [ ] Create database connection & SQLAlchemy async engine
+- [x] Initialize Git with poetry/uv
+- [x] Configure docker-compose (Postgres + TimescaleDB)
+- [x] Create database connection & SQLAlchemy async engine
 
 ### Phase 2: The Data Pipeline
-**Status**: ⬜ Not Started
+**Status**: 🚧 Next
 **Objective**: Implement resilient data fetching and storage.
 **Requirements**: REQ-01, REQ-02, REQ-03, REQ-06
 **Tasks**:

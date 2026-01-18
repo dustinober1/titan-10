@@ -1,7 +1,11 @@
 # Project State
 
 ## Last Session Summary
-Codebase mapping complete.
-- Found typical Python ETL structure
-- Identified ~7 core components in `src/`
-- Mapped dependencies in `pyproject.toml`
+**Phase 1: Foundation Complete**
+- Infrastructure: Dockerized TimescaleDB (Postgres 16) running.
+- Backend: Async SQLAlchemy engine configured.
+- Dependencies: Standardized on `uv` with `alembic` added.
+
+## Current Context
+- **Next Phase**: Phase 2 (Data Pipeline)
+- **Active Task**: Preparing to implement CCXT fetcher and DB migrations.
