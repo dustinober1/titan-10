@@ -28,14 +28,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. System automatically recovers from exchange API disconnections and rate limit errors without crashing
   4. System detects and reports data gaps in the historical archive
   5. All stored data uses UTC timestamps with normalized OHLCV constraints (no negative prices, high >= low, etc.)
-**Plans**: TBD
+**Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 01-01: Project scaffolding and TimescaleDB hypertable setup
-- [ ] 01-02: CCXT integration with real-time data fetching
-- [ ] 01-03: Historical backfill with checkpoint-based recovery
-- [ ] 01-04: Multi-exchange redundancy and data normalization
-- [ ] 01-05: Autonomous error handling with exponential backoff and circuit breakers
+- [ ] 01-01-PLAN.md — Project scaffolding and TimescaleDB hypertable setup
+- [ ] 01-02-PLAN.md — CCXT integration with real-time data fetching
+- [ ] 01-03-PLAN.md — Historical backfill with checkpoint-based recovery
+- [ ] 01-04-PLAN.md — Multi-exchange redundancy and data normalization
+- [ ] 01-05-PLAN.md — Autonomous error handling with exponential backoff and circuit breakers
 
 ### Phase 2: Analysis Engine
 **Goal**: System computes technical indicators and statistical metrics from stored market data
@@ -117,7 +117,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Ingestion | 0/5 | Not started | - |
+| 1. Foundation & Data Ingestion | 0/5 | Ready to execute | - |
 | 2. Analysis Engine | 0/4 | Not started | - |
 | 3. API Layer | 0/4 | Not started | - |
 | 4. Operations & Monitoring | 0/4 | Not started | - |
