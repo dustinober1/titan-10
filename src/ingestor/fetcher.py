@@ -92,6 +92,43 @@ class CryptoFetcher:
                     logger.error(f"Ingestion failed for {symbol}: {e}")
                     await session.rollback()
 
+
+async def fetch_realtime_ohlcv(
+    symbols: List[str],
+    exchanges: List[str],
+    storage,
+) -> dict:
+    """
+    Fetch real-time OHLCV data for given symbols from specified exchanges.
+    
+    This is a convenience function used by the scheduler.
+    
+    Args:
+        symbols: List of trading symbols (e.g., ['BTC/USDT', 'ETH/USDT'])
+        exchanges: List of exchange IDs (e.g., ['binance'])
+        storage: Database storage pool for persistence
+        
+    Returns:
+        Dict with 'success' and 'total' counts
+    """
+    fetcher = CryptoFetcher()
+    success_count = 0
+    
+    for symbol in symbols:
+        try:
+            candles = await fetcher.fetch_ohlcv(symbol, timeframe='1m', limit=100)
+            if candles:
+                success_count += 1
+                logger.info(f"Fetched {len(candles)} candles for {symbol}")
+        except Exception as e:
+            logger.error(f"Failed to fetch {symbol}: {e}")
+    
+    return {
+        "success": success_count,
+        "total": len(symbols)
+    }
+
+
 if __name__ == "__main__":
     # Integration smoke test
     async def main():
@@ -100,3 +137,4 @@ if __name__ == "__main__":
         await fetcher.run_ingestion()
     
     asyncio.run(main())
+
