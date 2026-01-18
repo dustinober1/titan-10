@@ -29,17 +29,17 @@
 - [x] Write Integration Tests (Fetch -> DB -> Read)
 
 ### Phase 3: The Math
-**Status**: 🚧 Next
+**Status**: ✅ Complete
 **Objective**: Implement analytical engine and statistical metrics.
 **Requirements**: REQ-04, REQ-05
 **Tasks**:
-- [ ] Implement AnalysisService (pandas-ta)
-- [ ] Create `computed_metrics` table
-- [ ] Implement Math Unit Tests
-- [ ] Wire up event-driven analysis trigger
+- [x] Implement AnalysisService (pandas-ta)
+- [x] Create `computed_metrics` table
+- [x] Implement Math Unit Tests
+- [x] Wire up event-driven analysis trigger
 
 ### Phase 4: The API & Polish
-**Status**: ⬜ Not Started
+**Status**: 🚧 Next
 **Objective**: Expose data via high-performance API.
 **Requirements**: REQ-07, REQ-08, REQ-09, REQ-10
 **Tasks**:

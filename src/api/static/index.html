@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titan-10 | Mission Control</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
+            <div>
+                <h1
+                    class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                    Titan-10
+                </h1>
+                <p class="text-gray-400 text-sm">Autonomous Quantitative Engine</p>
+            </div>
+            <div id="status-indicator" class="flex items-center space-x-2">
+                <span class="h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
+                <span class="text-sm font-semibold">Disconnected</span>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+            <!-- Sidebar: Asset List -->
+            <div class="col-span-1 bg-gray-800 rounded-xl p-4 border border-gray-700">
+                <h2 class="text-xl font-semibold mb-4 text-blue-400">Assets</h2>
+                <div id="asset-list" class="space-y-2">
+                    <!-- Javascript will populate this -->
+                    <div class="animate-pulse bg-gray-700 h-10 rounded"></div>
+                    <div class="animate-pulse bg-gray-700 h-10 rounded"></div>
+                    <div class="animate-pulse bg-gray-700 h-10 rounded"></div>
+                </div>
+            </div>
+
+            <!-- Main Content: Charts & Metrics -->
+            <div class="col-span-1 md:col-span-3 space-y-6">
+
+                <!-- KPI Cards -->
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                        <p class="text-gray-400 text-xs uppercase">Price</p>
+                        <p id="kpi-price" class="text-2xl font-bold">--</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                        <p class="text-gray-400 text-xs uppercase">RSI (14)</p>
+                        <p id="kpi-rsi" class="text-2xl font-bold">--</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                        <p class="text-gray-400 text-xs uppercase">Z-Score</p>
+                        <p id="kpi-zscore" class="text-2xl font-bold">--</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                        <p class="text-gray-400 text-xs uppercase">BB Width</p>
+                        <p id="kpi-bbw" class="text-2xl font-bold">--</p>
+                    </div>
+                </div>
+
+                <!-- Main Chart -->
+                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 h-96">
+                    <canvas id="priceChart"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = ""; // Relative path
+        const ASSETS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "BNB/USDT", "XRP/USDT"];
+        let currentSymbol = "BTC/USDT";
+        let chartInstance = null;
+
+        // Health Check
+        async function checkHealth() {
+            try {
+                const res = await fetch(`${API_BASE}/actuator/health`);
+                if (res.ok) {
+                    document.getElementById('status-indicator').innerHTML = `
+                        <span class="h-3 w-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.7)]"></span>
+                        <span class="text-sm font-semibold text-green-400">System Online</span>
+                    `;
+                }
+            } catch (e) {
+                console.error("Health check failed", e);
+            }
+        }
+
+        // Load Data for Symbol
+        async function loadData(symbol) {
+            currentSymbol = symbol;
+            const apiSymbol = symbol.replace('/', '-'); // Use hyphen for API
+
+            document.querySelectorAll('.asset-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-700', 'text-gray-300');
+            });
+            document.getElementById(`btn-${symbol.replace('/', '-')}`).classList.remove('bg-gray-700', 'text-gray-300');
+            document.getElementById(`btn-${symbol.replace('/', '-')}`).classList.add('bg-blue-600', 'text-white');
+
+            try {
+                const [marketRes, metricsRes] = await Promise.all([
+                    fetch(`${API_BASE}/api/v1/market/${apiSymbol}?limit=50`),
+                    fetch(`${API_BASE}/api/v1/metrics/${apiSymbol}?limit=50`)
+                ]);
+
+                const marketData = await marketRes.json();
+                const metricsData = await metricsRes.json();
+
+                updateKPIs(marketData[0], metricsData[0]);
+                renderChart(marketData, metricsData);
+
+            } catch (e) {
+                console.error("Data load failed", e);
+            }
+        }
+
+        function updateKPIs(priceData, metricsData) {
+            if (!priceData || !metricsData) return;
+
+            document.getElementById('kpi-price').innerText = `$${priceData.close.toFixed(2)}`;
+
+            const rsi = metricsData.rsi_14;
+            const rsiEl = document.getElementById('kpi-rsi');
+            rsiEl.innerText = rsi ? rsi.toFixed(2) : '--';
+            rsiEl.className = `text-2xl font-bold ${rsi > 70 ? 'text-red-400' : rsi < 30 ? 'text-green-400' : 'text-gray-100'}`;
+
+            const zscore = metricsData.z_score;
+            document.getElementById('kpi-zscore').innerText = zscore ? zscore.toFixed(2) : '--';
+
+            const bbw = metricsData.bb_width;
+            document.getElementById('kpi-bbw').innerText = bbw ? bbw.toFixed(4) : '--';
+        }
+
+        function renderChart(marketData, metricsData) {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            const labels = marketData.map(d => new Date(d.time).toLocaleTimeString()).reverse();
+            const prices = marketData.map(d => d.close).reverse();
+
+            // Align metrics with prices (assuming same sorting/limit)
+            // Ideally should join on timestamp, but for MVP assuming 1:1 array map
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Price',
+                        data: prices,
+                        borderColor: '#60a5fa', // Blue 400
+                        tension: 0.1,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: {
+                            grid: { color: '#374151' }, // Gray 700
+                            ticks: { color: '#9ca3af' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function init() {
+            // Populate Asset List
+            const list = document.getElementById('asset-list');
+            list.innerHTML = '';
+
+            ASSETS.forEach(symbol => {
+                const btn = document.createElement('button');
+                btn.id = `btn-${symbol.replace('/', '-')}`;
+                btn.className = "asset-btn w-full text-left px-4 py-3 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 transition-colors font-medium flex justify-between items-center";
+                btn.innerHTML = `<span>${symbol}</span>`;
+                btn.onclick = () => loadData(symbol);
+                list.appendChild(btn);
+            });
+
+            checkHealth();
+            loadData(currentSymbol);
+
+            // Auto Update
+            setInterval(checkHealth, 30000);
+            setInterval(() => loadData(currentSymbol), 5000); // Poll every 5s
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

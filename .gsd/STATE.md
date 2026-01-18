@@ -1,11 +1,14 @@
-# Project State
+# State
 
-## Last Session Summary
-**Phase 3: The Math Complete**
-- Analysis Engine: Implemented using `ta` library.
-- Database: `ComputedMetrics` table active and populating.
-- Pipeline: Fetch -> Ingest -> Analyze flow verified.
+## Current Position
+- **Phase**: 4 (The Interface)
+- **Status**: ✅ Complete and verified
+- **Next**: Phase 5 (Strategy & Execution) or Project Close
+- **Phase 2 (Data Pipeline)**: Built `CryptoFetcher` (ccxt), created `raw_market_data` table, verified ingestion.
+- **Phase 3 (The Math)**: Built `AnalysisEngine` (ta), created `computed_metrics` table, integrated real-time analysis.
+- **Phase 4 (The Interface)**: Built FastAPI server, endpoints, and Dashboard UI. Resolved path routing issues by adopting hyphenated symbols.
 
-## Current Context
-- **Next Phase**: Phase 4 (The Interface)
-- **Active Task**: Starting API development with FastAPI.
+## Next Steps
+- Run the full stack (`src/ingestor/fetcher.py` and `src/api/main.py`).
+- Monitor dashboard for live updates.
+- Future: Add Backtesting engine (Phase 5+).
