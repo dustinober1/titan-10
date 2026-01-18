@@ -3,7 +3,7 @@ name = "titan-10"
 version = "0.1.0"
 description = "Autonomous cryptocurrency market data ingestion and analysis system"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "ccxt>=4.5.0",
     "asyncpg>=0.29.0",
@@ -15,6 +15,9 @@ dependencies = [
     "alembic>=1.13.0",
     "sqlalchemy>=2.0.0",
     "greenlet>=3.0.0",
+    "pandas>=2.0.0",
+    "ta>=0.11.0",
+    "numpy>=1.24.0",
 ]
 
 [project.optional-dependencies]

@@ -9,6 +9,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from src.storage.db import AsyncSessionLocal
 from src.storage.models import RawMarketData
 from src.shared.config import get_settings
+from src.quant.analysis import AnalysisEngine
 
 settings = get_settings()
 
@@ -20,6 +21,7 @@ class CryptoFetcher:
     """
     def __init__(self):
         self.max_retries = 3
+        self.analysis_engine = AnalysisEngine()
 
     @retry(
         stop=stop_after_attempt(5),
@@ -63,8 +65,6 @@ class CryptoFetcher:
                         # c[0] is timestamp in ms
                         dt = datetime.fromtimestamp(c[0] / 1000.0)
                         
-                        # Dedup check could happen here, or reliance on PK constraint (upsert)
-                        # For now, simple insert object creation
                         data = RawMarketData(
                             time=dt,
                             symbol=symbol,
@@ -76,15 +76,17 @@ class CryptoFetcher:
                         )
                         data_objects.append(data)
                     
-                    # Merge/Upsert logic needed for robustness
-                    # For MVP Phase 2, naive add_all + commit (might fail on dupes)
-                    # Ideally use postgres ON CONFLICT
-                    
+                    # Merge/Upsert
                     for obj in data_objects:
                         await session.merge(obj)
                         
                     await session.commit()
                     logger.info(f"Saved {len(data_objects)} candles for {symbol}")
+
+                    # Trigger Analysis
+                    logger.info(f"Analyzing {symbol}...")
+                    count = await self.analysis_engine.calculate_metrics(symbol, session)
+                    logger.info(f"Calculated metrics for {count} rows of {symbol}")
                     
                 except Exception as e:
                     logger.error(f"Ingestion failed for {symbol}: {e}")

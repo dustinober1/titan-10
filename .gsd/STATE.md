@@ -1,11 +1,11 @@
 # Project State
 
 ## Last Session Summary
-**Phase 2: Data Pipeline Complete**
-- Database: `RawMarketData` table created via Alembic.
-- Ingestion: `CryptoFetcher` active (using `binanceus`).
-- Data: Verified insertion of ~1000 candles for top assets.
+**Phase 3: The Math Complete**
+- Analysis Engine: Implemented using `ta` library.
+- Database: `ComputedMetrics` table active and populating.
+- Pipeline: Fetch -> Ingest -> Analyze flow verified.
 
 ## Current Context
-- **Next Phase**: Phase 3 (The Math)
-- **Active Task**: Implementing `pandas-ta` analysis and `computed_metrics` table.
+- **Next Phase**: Phase 4 (The Interface)
+- **Active Task**: Starting API development with FastAPI.
