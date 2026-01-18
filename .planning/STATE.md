@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2025-01-18)
 ## Current Position
 
 Phase: 1 of 5 (Foundation & Data Ingestion)
-Plan: 1 of 5 in current phase
+Plan: 2 of 5 in current phase
 Status: In progress
-Last activity: 2025-01-18 — Completed 01-01: Project Foundation (TimescaleDB, asyncpg pool, Pydantic settings)
+Last activity: 2025-01-18 — Completed 01-02: CCXT Integration (Exchange wrapper, multi-exchange fetching, Pydantic validation, APScheduler)
 
-Progress: [██░░░░░░░░] 20%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 13 min
-- Total execution time: 0.2 hours
+- Total plans completed: 2
+- Average duration: 8 min
+- Total execution time: 0.3 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 1/5 | 13 min | 13 min |
+| 01 | 2/5 | 16 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (13min)
-- Trend: Off to strong start
+- Last 5 plans: 01-02 (3min), 01-01 (13min)
+- Trend: Accelerating (CCXT integration faster than expected)
 
 *Updated after each plan completion*
 
@@ -49,19 +49,28 @@ Recent decisions affecting current work:
 - Avoided compress_segmentby on 'symbol' to prevent high-cardinality compression anti-pattern
 - Implemented auto-reconnect with 5 max attempts and 1s exponential backoff base delay (AUTO-02 requirement)
 
+**From 01-02 (CCXT Integration):**
+- Used ccxt.async_support instead of synchronous ccxt module (anti-pattern from research)
+- Enabled enableRateLimit=True to prevent IP bans (Pitfall 1 from research)
+- Implemented tenacity @retry decorator with exponential backoff (1s min, 60s max, 5 attempts)
+- Used asyncio.gather with return_exceptions=True for error isolation between exchanges
+- Pydantic field_validator for OHLCV constraints (high >= low, prices within range, positive values)
+- APScheduler AsyncIOScheduler for native async job scheduling (Pattern 3 from research)
+
 ### Pending Todos
 
 None yet.
 
 ### Blockers/Concerns
 
-**From 01-01 (Project Foundation):**
+**From 01-02 (CCXT Integration):**
 - No blockers - all tasks completed successfully
-- Next phase (01-02 CCXT integration) ready to start
+- Next phase (01-03 historical backfill) ready to start
+- Exchange API keys are optional (public data access works without authentication)
 
 ## Session Continuity
 
-Last session: 2025-01-18 (01-01 execution completed)
-Stopped at: Completed 01-01-PLAN.md (Project Foundation)
+Last session: 2025-01-18 (01-02 execution completed)
+Stopped at: Completed 01-02-PLAN.md (CCXT Integration)
 Resume file: None
-SUMMARY: .planning/phases/01-foundation-data-ingestion/01-01-SUMMARY.md
+SUMMARY: .planning/phases/01-foundation-data-ingestion/01-02-SUMMARY.md
